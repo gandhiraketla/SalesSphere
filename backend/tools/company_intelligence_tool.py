@@ -4,6 +4,7 @@ from pydantic import Field, ConfigDict
 import sys
 import os
 import json
+
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
@@ -20,18 +21,21 @@ class CompanyIntelligenceTool(BaseTool):
     )
     service: CompanyIntelligenceService = Field(default_factory=CompanyIntelligenceService)
 
-    def _run(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    def _run(
+        self, 
+        industry: Optional[str] = None,
+        company_stage: Optional[str] = None,
+        geography: Optional[str] = None,
+        funding_stage: Optional[str] = None
+    ) -> Dict[str, Any]:
         """
         Execute the company intelligence search using Perplexity AI.
         
         Args:
-            params (Dict[str, Any]): The input parameters, may include:
-                - industry (str, optional): The industry to search in (e.g., "healthcare", "retail")
-                - company_name (str, optional): Specific company to search for
-                - product (str, optional): Product or service type to search for
-                - company_stage (str, optional): Stage of company ("startup", "smb", "enterprise", "growing")
-                - geography (str, optional): Location to search in (e.g., "Texas", "Europe")
-                - funding_stage (str, optional): Funding stage to search for (e.g., "seed", "series A")
+            industry (str, optional): The industry to search in (e.g., "healthcare", "retail")
+            company_stage (str, optional): Stage of company ("startup", "smb", "enterprise", "growing")
+            geography (str, optional): Location to search in (e.g., "Texas", "Europe")
+            funding_stage (str, optional): Funding stage to search for (e.g., "seed", "series A")
         
         Returns:
             Dict[str, Any]: The formatted company intelligence results.
@@ -39,26 +43,26 @@ class CompanyIntelligenceTool(BaseTool):
         try:
             # Validate company_stage if provided
             valid_stages = ["startup", "smb", "enterprise", "growing"]
-            if params.get("company_stage") and params["company_stage"].lower() not in valid_stages:
+            if company_stage and company_stage.lower() not in valid_stages:
                 raise ValueError(
                     f"Invalid company_stage. Must be one of: {', '.join(valid_stages)}"
                 )
 
             # Clean and prepare parameters
             clean_params = {
-                "industry": params.get("industry"),
-                "company_name": params.get("company_name"),
-                "product": params.get("product"),
-                "company_stage": params.get("company_stage", "").lower() if params.get("company_stage") else None,
-                "geography": params.get("geography"),
-                "funding_stage": params.get("funding_stage")
+                "industry": industry,
+                "company_stage": company_stage.lower() if company_stage else None,
+                "geography": geography,
+                "funding_stage": funding_stage,
+                "company_name": None,  # Not used in this version
+                "product": None        # Not used in this version
             }
 
             # Ensure at least one search parameter is provided
             if not any(clean_params.values()):
                 raise ValueError(
                     "At least one search parameter must be provided "
-                    "(industry, company_name, product, company_stage, geography, or funding_stage)"
+                    "(industry, company_stage, geography, or funding_stage)"
                 )
 
             # Perform the company intelligence search
@@ -69,7 +73,12 @@ class CompanyIntelligenceTool(BaseTool):
         except Exception as e:
             return {
                 "error": str(e),
-                "search_params": clean_params if 'clean_params' in locals() else params
+                "search_params": clean_params if 'clean_params' in locals() else {
+                    "industry": industry,
+                    "company_stage": company_stage,
+                    "geography": geography,
+                    "funding_stage": funding_stage
+                }
             }
 
     def _format_result(self, result: str) -> Dict[str, Any]:
@@ -89,26 +98,15 @@ if __name__ == "__main__":
     # Test cases
     test_cases = [
         {
-            "industry": "healthcare",
+            "industry": "retail",
             "company_stage": "startup",
-            "geography": "Texas",
-            "funding_stage": "series A"
-        },
-        {
-            "company_name": "Salesforce",
-            "company_stage": "enterprise",
-            "geography": "US"
-        },
-        {
-            "product": "CRM",
-            "company_stage": "growing",
-            "geography": "Europe",
-            "funding_stage": "series B"
+            "geography": "California",
+            "funding_stage": ""
         }
     ]
     
     for case in test_cases:
         print(f"\nTesting with parameters: {case}")
-        result = tool._run(case)
+        result = tool._run(**case)  # Note the ** to unpack the dictionary
         print("Company Intelligence Results:")
         print(result)

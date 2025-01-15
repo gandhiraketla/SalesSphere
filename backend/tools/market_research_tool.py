@@ -23,22 +23,21 @@ class MarketResearchTool(BaseTool):
     )
     service: MarketResearchService = Field(default_factory=MarketResearchService)
 
-    def _run(self, params: Dict[str, Any]) -> str:
+    def _run(
+        self, 
+        industry: Optional[str] = None,
+        product: Optional[str] = None
+    ) -> str:
         """
         Execute the market research intelligence search.
         
         Args:
-            params (Dict[str, Any]): The input parameters
-                - industry (str, optional): The target industry 
-                - product (str, optional): Specific product or technology
+            industry (str, optional): The target industry
+            product (str, optional): Specific product or technology
         
         Returns:
             str: Market research insights
         """
-        # Clean parameters
-        industry = params.get("industry")
-        product = params.get("product")
-
         # Validate input
         if not industry and not product:
             raise ValueError(
@@ -58,14 +57,15 @@ if __name__ == "__main__":
     
     # Test cases
     test_cases = [
+        
         {
-            "industry": "healthcare",
-            "product": "AI"
+            "industry": "retail",
+            "product": "AI In Customer analytics"
         }
     ]
     
     for case in test_cases:
         print(f"\nTesting with parameters: {case}")
-        result = tool._run(case)
+        result = tool._run(**case)  # Note the ** to unpack the dictionary
         print("Market Research Results:")
         print(result)

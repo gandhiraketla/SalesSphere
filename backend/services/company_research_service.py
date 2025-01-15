@@ -182,7 +182,7 @@ if __name__ == "__main__":
             "company_name": None,
             "product": None,
             "company_stage": "startup",
-            "geography": "Texas",
+            "geography": "California",
             "funding_stage": ""
         }
     ]

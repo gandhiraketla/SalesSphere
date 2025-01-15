@@ -103,12 +103,13 @@ class ResearchCrew:
         # Company Research Task
         self.company_research_task = Task(
             description=(
-                "Step 1 - Initial Company Search:\n"
-                "Use Company Intelligence Search tool with these criteria:\n"
-                "- Industry: {industry}\n"
-                "- Company Stage: {company_stage}\n"
-                "- Geography: {geography}\n"
-                "- Funding Stage: {funding_stage}\n\n"
+                "Research companies by following these steps:\n\n"
+                "Step 1 - Initial Search:\n"
+                "Use Company Intelligence Search tool with these exact parameters:\n"
+                "industry: {industry}\n"
+                "company_stage: {company_stage}\n"
+                "geography: {geography}\n"
+                "funding_stage: {funding_stage}\n\n"
                 "Step 2 - For ONLY the companies returned by the tool, analyze:\n"
                 "1. Business model and market fit\n"
                 "2. Growth potential and market opportunity\n"
@@ -116,9 +117,9 @@ class ResearchCrew:
                 "4. Financial health and funding history\n"
                 "5. Competitive advantages and unique value propositions\n\n"
                 "Important Rules:\n"
-                "- Only analyze companies from tool results\n"
-                "- Search each company only once\n"
-                "- Note competitor information if direct data unavailable\n"
+                "- Only analyze companies that were returned in tool results\n"
+                "- Do not search for additional companies\n"
+                "- Use competitor information if direct data unavailable\n"
                 "- Do not make assumptions about missing data"
             ),
             expected_output=(
@@ -141,26 +142,42 @@ class ResearchCrew:
         # Market Research Task
         self.market_trends_task = Task(
             description=(
-                "Analyze market trends based on these parameters:\n"
-                "Industry: {industry}\n"
-                "{product}"
-                "\nProvide insights on:\n"
-                "1. Current market trends\n"
-                "2. Growth opportunities\n"
-                "3. Key challenges\n"
-                "4. Future outlook\n\n"
-                "Format the output as a clear, structured analysis."
+                "Step 1: Get market research using tool:\n"
+                "Use Market Research Intelligence tool with:\n"
+                "industry: {industry}\n"
+                "product: {product}\n\n"
+                "Step 2: For each company from company research results:\n"
+                "1. Look at their specific business model and focus:\n"
+                "   - What they do\n"
+                "   - Their target market\n"
+                "   - Current capabilities\n\n"
+                "2. Connect relevant market insights:\n"
+                "   - Which market trends directly affect their business\n"
+                "   - Which opportunities match their capabilities\n"
+                "   - Which challenges specifically impact them\n"
+                "   - How future market changes will affect them\n\n"
+                "Create a company-specific analysis connecting market insights to each business.\n"
+                "Use only the tool output and connect it to each company."
             ),
             expected_output=(
-                "A comprehensive market analysis including:\n"
-                "- Current market trends and dynamics\n"
-                "- Growth opportunities and potential\n"
-                "- Key challenges and considerations\n"
-                "- Future market outlook"
+                "A JSON array with market insights for each company:\n"
+                "[\n"
+                "    {\n"
+                "        'company_name': 'From company research',\n"
+                "        'business_focus': 'Company's main business area',\n"
+                "        'relevant_trends': 'Market trends affecting this specific business',\n"
+                "        'matched_opportunities': 'Opportunities this company can leverage',\n"
+                "        'specific_challenges': 'Challenges affecting this business model',\n"
+                "        'growth_potential': 'How market changes affect their future'\n"
+                "    },\n"
+                "    ...\n"
+                "]\n"
+                "Note: Focus on connecting existing market research to each company's specific situation"
             ),
             agent=self.market_trends_agent,
-            callback=self._on_task_complete
-        )
+            callback=self._on_task_complete,
+            context=[self.company_research_task]  # Access to company research results
+   )
 
         # Outreach Task
         self.outreach_task = Task(
