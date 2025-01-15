@@ -136,6 +136,7 @@ Important instructions:
     def get_perplexity_data(self, prompt: str) -> str:
         """Get company data from Perplexity API"""
         try:
+            print(f"Calling Perplexity API with prompt: {prompt}")
             # Prepare the messages
             messages = [
                 {
@@ -177,36 +178,12 @@ if __name__ == "__main__":
     # Test different search scenarios
     test_cases = [
         {
-            "industry": "healthcare",
+            "industry": "retail",
             "company_name": None,
             "product": None,
             "company_stage": "startup",
             "geography": "Texas",
-            "funding_stage": "series A"
-        },
-        {
-            "industry": None,
-            "company_name": "Salesforce",
-            "product": None,
-            "company_stage": "enterprise",
-            "geography": "US",
-            "funding_stage": None
-        },
-        {
-            "industry": None,
-            "company_name": None,
-            "product": "CRM",
-            "company_stage": "growing",
-            "geography": "Europe",
-            "funding_stage": "series B"
-        },
-        {
-            "industry": "retail",
-            "company_name": None,
-            "product": "AI analytics",
-            "company_stage": "startup",
-            "geography": "California",
-            "funding_stage": "seed"
+            "funding_stage": ""
         }
     ]
     

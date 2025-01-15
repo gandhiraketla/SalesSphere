@@ -15,12 +15,7 @@ class ResearchCrew:
         self.llm = LLM(
             model="gpt-4",
             temperature=0.8,
-            max_tokens=1000,
-            top_p=0.9,
-            frequency_penalty=0.1,
-            presence_penalty=0.1,
-            stop=["END"],
-            seed=42
+            max_tokens=1500
         )
         
         # Initialize everything
@@ -36,10 +31,11 @@ class ResearchCrew:
             else:
                 # If it's a task object
                 agent_name = getattr(task_output, 'agent', None)
+                print(f"Agent name: {agent_name}")
                 if agent_name and hasattr(agent_name, 'role'):
                     self.task_callback(f"{agent_name.role} has completed their task")
                 else:
-                    self.task_callback("Task completed")
+                    self.task_callback(f"{agent_name} has completed their task")
 
     def _initialize_agents(self) -> None:
         """Initialize all agents"""
@@ -107,32 +103,36 @@ class ResearchCrew:
         # Company Research Task
         self.company_research_task = Task(
             description=(
-                "Research and analyze companies based on the following criteria:\n"
+                "Step 1 - Initial Company Search:\n"
+                "Use Company Intelligence Search tool with these criteria:\n"
                 "- Industry: {industry}\n"
                 "- Company Stage: {company_stage}\n"
                 "- Geography: {geography}\n"
                 "- Funding Stage: {funding_stage}\n\n"
-                "For the matching companies, analyze:\n"
+                "Step 2 - For ONLY the companies returned by the tool, analyze:\n"
                 "1. Business model and market fit\n"
                 "2. Growth potential and market opportunity\n"
                 "3. Team composition and experience\n"
                 "4. Financial health and funding history\n"
-                "5. Competitive advantages and unique value propositions\n"
-                "6. Search each company only once\n"
-                "7. If direct information isn't available, note what is known from competitor data\n"
-                "8. Move on to the next company after one search attempt"
+                "5. Competitive advantages and unique value propositions\n\n"
+                "Important Rules:\n"
+                "- Only analyze companies from tool results\n"
+                "- Search each company only once\n"
+                "- Note competitor information if direct data unavailable\n"
+                "- Do not make assumptions about missing data"
             ),
             expected_output=(
-                "A detailed analytical report containing:\n"
-                "For each company:\n"
+                "For each company found by the tool:\n"
                 "- Company Name\n"
                 "- Website\n"
-                "- Headquarters Location\n"
-                "- Funding Type/Status\n"
+                "- Headquarters\n"
+                "- Funding Status\n"
                 "- Business Overview\n"
-                "- Market Position and Growth Potential\n"
-                "- Competitive Advantages\n"
-                "\nFormat as a structured list with clear headers for each company."
+                "- Growth Analysis\n"
+                "- Team Info\n"
+                "- Financial Status\n"
+                "- Competitive Position\n\n"
+                "Note: Only include companies that were returned by the initial tool search"
             ),
             agent=self.company_research_agent,
             callback=self._on_task_complete
@@ -167,7 +167,7 @@ class ResearchCrew:
             description=(
                 "Using the provided research, create personalized emails.\n"
                 "Email body has to be elaborative with information from research and market trends\n"
-                "Return a JSON array with company name, website, headquarters, funding status, email subject and body\n"
+                "Return a well structured JSON array with company name, website, headquarters, funding status, email subject and body\n"
                 "Email body has to be between 50 and 125 words\n "
                 "provide only JSON array no other text"
                 
@@ -236,11 +236,11 @@ def main():
 
     # Test inputs
     test_inputs = {
-        "industry": "healthcare",
+        "industry": "retail",
         "company_stage": "startup",
-        "geography": "Texas",
-        "funding_stage": "series A",
-        "product": "AI"  # Optional
+        "geography": "California",
+        "funding_stage": "",
+        "product": "AI in customer analytics"  # Optional
     }
 
     try:
