@@ -30,7 +30,7 @@ class LeadGenerationAPI:
             allow_methods=["*"],  # Allows all methods
             allow_headers=["*"],  # Allows all headers
         )
-        self.use_agent_json = False
+        self.use_agent_json = True # Make it true to make any UI change to avoid hitting backend and LLM
         @self.app.post("/research")
         def execute_research(request: QueryRequest):
             if self.use_agent_json:
