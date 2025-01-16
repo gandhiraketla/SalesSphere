@@ -8,14 +8,14 @@ from crewai import Agent, Task, Crew,LLM,Process
 from tools.company_intelligence_tool import CompanyIntelligenceTool
 from tools.market_research_tool import MarketResearchTool
 class ResearchCrew:
-    def __init__(self, task_callback=None):
-        self.task_callback = task_callback
+    def __init__(self):
+        #self.task_callback = task_callback
         
         # Initialize LLM
         self.llm = LLM(
             model="gpt-4",
             temperature=0.8,
-            max_tokens=1500
+            max_tokens=5000
         )
         
         # Initialize everything
@@ -135,8 +135,7 @@ class ResearchCrew:
                 "- Competitive Position\n\n"
                 "Note: Only include companies that were returned by the initial tool search"
             ),
-            agent=self.company_research_agent,
-            callback=self._on_task_complete
+            agent=self.company_research_agent
         )
 
         # Market Research Task
@@ -175,7 +174,6 @@ class ResearchCrew:
                 "Note: Focus on connecting existing market research to each company's specific situation"
             ),
             agent=self.market_trends_agent,
-            callback=self._on_task_complete,
             context=[self.company_research_task]  # Access to company research results
    )
 
@@ -195,8 +193,7 @@ class ResearchCrew:
                 "- Personalized subject line\n"
                 "- Customized email body"
             ),
-            agent=self.outreach_agent,
-            callback=self._on_task_complete
+            agent=self.outreach_agent
             
         )
 
@@ -234,8 +231,25 @@ class ResearchCrew:
             )
 
             # Execute the process
+            print("Starting research process...")
             results = research_crew.kickoff(inputs=research_inputs)
-            return results
+            #print(f"Raw Output: {results.raw}")
+            #if results.json_dict:
+                 #print(f"JSON Output: {json.dumps(results.json_dict, indent=2)}")
+            #if results.pydantic:
+             #   print(f"Pydantic Output: {results.pydantic}")
+            #print(f"Tasks Output: {results.tasks_output}")
+            #print(f"Token Usage: {results.token_usage}")
+            #print("Raw results from kickoff:", results)
+            #print("Type of results:", type(results))
+            #print("Attributes of results:", dir(results))
+            #print("Results Type:", type(results))
+            #print("Results Dir:", dir(results))
+            #json_results = json.loads(str(results))
+            #tasks_output = results.get('tasks_output', [])
+            
+            print("Returning Results")
+            return results.raw
 
         except Exception as e:
             print(f"An error occurred during research: {str(e)}")
@@ -247,9 +261,7 @@ def example_task_callback(message):
 
 def main():
     """Main function to test the research functionality"""
-    crew = ResearchCrew(
-        task_callback=example_task_callback
-    )
+    crew = ResearchCrew()
 
     # Test inputs
     test_inputs = {

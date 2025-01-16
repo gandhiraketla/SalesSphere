@@ -5,22 +5,25 @@ import os
 import pathlib
 from dotenv import load_dotenv
 from openai import OpenAI
-
+import sys
+import os
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+from utils.envutils import EnvUtils
 class CompanyIntelligenceService:
     def __init__(self):
         """Initialize the service with Perplexity API"""
         # Load environment variables
-        env_path = pathlib.Path(__file__).parent.parent / '.env'
-        load_dotenv(env_path)
-        
-        # Get Perplexity API key
-        api_key = os.getenv("PERPLEXITY_API_KEY")
-        if not api_key:
+        self.env_utils = EnvUtils()
+        self.api_key = self.env_utils.get_required_env('PERPLEXITY_API_KEY')
+        self.model = self.env_utils.get_required_env('PERPLEXITY_MODEL_NAME')
+        if not self.api_key:
             raise ValueError("Please set the PERPLEXITY_API_KEY environment variable")
             
         # Initialize Perplexity client
         self.client = OpenAI(
-            api_key=api_key,
+            api_key=self.api_key,
             base_url="https://api.perplexity.ai"
         )
 
@@ -136,7 +139,7 @@ Important instructions:
     def get_perplexity_data(self, prompt: str) -> str:
         """Get company data from Perplexity API"""
         try:
-            print(f"Calling Perplexity API with prompt: {prompt}")
+            #print(f"Calling Perplexity API with prompt: {prompt}")
             # Prepare the messages
             messages = [
                 {
@@ -151,7 +154,7 @@ Important instructions:
             
             # Make the API call
             response = self.client.chat.completions.create(
-                model="llama-3.1-sonar-small-128k-online",
+                model=self.model,
                 messages=messages,
                 temperature=0.1  # Lower temperature for more consistent JSON
             )

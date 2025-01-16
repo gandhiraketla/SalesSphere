@@ -4,11 +4,21 @@ import json
 import requests
 from typing import Dict, Any, Optional
 from dotenv import load_dotenv
+import sys
+import os
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+from utils.envutils import EnvUtils
 
 class MarketResearchService:
     def __init__(self):
         # Load environment variables
-        load_dotenv()
+        self.env_utils = EnvUtils()
+        self.api_key = self.env_utils.get_required_env('PERPLEXITY_API_KEY')
+        self.model = self.env_utils.get_required_env('PERPLEXITY_MODEL_NAME')
+        if not self.api_key:
+            raise ValueError("Please set the PERPLEXITY_API_KEY environment variable")
 
         # Perplexity API Key
         self.perplexity_api_key = os.getenv('PERPLEXITY_API_KEY')
@@ -105,7 +115,7 @@ Provide specific, data-driven insights with a clear, structured approach that of
 
         # Payload for Perplexity API
         payload = {
-            "model": "llama-3.1-sonar-small-128k-online",
+            "model": self.model,
             "messages": [
                 {
                     "role": "system", 
