@@ -54,14 +54,13 @@ uvicorn api.main:app --reload
 # From the frontend directory
 npm run dev
 ```
-## Contributing
-Feel free to fork the repository and submit pull requests.
 
 3. Open your browser and navigate to:
 ```bash
  http://localhost:5173/
 ```
-
+## Contributing
+Feel free to fork the repository and submit pull requests
 
 
 
