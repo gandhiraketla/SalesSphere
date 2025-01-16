@@ -179,23 +179,39 @@ class ResearchCrew:
 
         # Outreach Task
         self.outreach_task = Task(
-            description=(
-                "Using the provided research, create personalized emails.\n"
-                "Email body has to be elaborative with information from research and market trends\n"
-                "Return a well structured JSON array with company name, website, headquarters, funding status, email subject and body\n"
-                "Email body has to be between 50 and 125 words\n "
-                "provide only JSON array no other text"
-                
-            ),
-            expected_output=(
-                "JSON array of emails, each containing:\n"
-                "- Company information from research\n"
-                "- Personalized subject line\n"
-                "- Customized email body"
-            ),
-            agent=self.outreach_agent
-            
-        )
+    description=(
+        "Create a JSON array of personalized emails for retail companies following these rules:\n"
+        "1. Each entry must contain: company_name, website, headquarters, funding_status, email_subject, and email_body\n"
+        "2. Email subject should be brief, focused on growth and technology adoption\n"
+        "3. Email body must:\n"
+        "   - Start with 'Dear [Company]'\n"
+        "   - Be between 50-125 words\n"
+        "   - Include company's market position and specific technology benefits\n"
+        "   - Mention growth potential and competitive advantages\n"
+        "4. Funding status should be in format: 'Series X' or 'IPO'\n"
+        "5. Website should be in format: 'www.company.com'\n"
+        "6. Headquarters should include city and country\n\n"
+        "Return ONLY a JSON array with this exact structure:\n"
+        "[{{\n"
+        '  "company_name": "Example Corp",\n'
+        '  "website": "www.example.com",\n'
+        '  "headquarters": "City, Country",\n'
+        '  "funding_status": "Series A",\n'
+        '  "email_subject": "Subject line here",\n'
+        '  "email_body": "Dear Example Corp, customized email content here..."\n'
+        "}}]"
+    ),
+    expected_output=(
+        "A JSON array where each object has:\n"
+        "- company_name (string)\n"
+        "- website (string in www format)\n"
+        "- headquarters (string as City, Country)\n"
+        "- funding_status (string as Series X or IPO)\n"
+        "- email_subject (string)\n"
+        "- email_body (string, 50-125 words)"
+    ),
+    agent=self.outreach_agent
+)
 
         # Supervisor Task is not needed as the supervisor agent will manage tasks automatically in hierarchical process
         # self.supervisor_task = Task(...
