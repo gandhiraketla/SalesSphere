@@ -9,10 +9,11 @@ SalesSphere is an intelligent lead generation platform designed to identify and 
 - 🎨 **Modern UI**: Enjoy a responsive and user-friendly interface.
 - ⚡ **Real-Time Analysis**: Generate and analyze leads instantly.
 ## Tech Stack
-- **Backend**: FastAPI, CrewAI, Perplexity, OpenAI
 - **Frontend**: Vue.js, Tailwind CSS
-- **AI/ML**: LangChain, SpaCy
-
+- **API Layer** : Fast API
+- **Agent Frmeworks**: CrewAI
+- **LLM**: OpenAI, Perplexity
+- **NLP**: Spacy
 
 ## Prerequisites
 Before starting, ensure you have the following installed:
