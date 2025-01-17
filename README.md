@@ -61,7 +61,8 @@ npm run dev
 
 3. Open your browser and navigate to:
 ```bash
- http://localhost:5173/
+ http://localhost:5174/
+ Note : Check for actual url in the log of npm run dev
 ```
 ## Contributing
 Feel free to fork the repository and submit pull requests
