@@ -52,6 +52,7 @@ uvicorn api.main:app --reload
 2. Start the Vue.js frontend development server:
 ```bash
 # From the frontend directory
+cd frontend
 npm run dev
 ```
 
