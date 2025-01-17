@@ -25,11 +25,12 @@ class LeadGenerationAPI:
         self.app = FastAPI()
         self.prompt_extractor = UserPromptExtractor()
         self.app.add_middleware(CORSMiddleware,
-            allow_origins=["http://localhost:5173"],  # Frontend URL
+            allow_origins=["http://localhost:5174"],  # Frontend URL
             allow_credentials=True,
             allow_methods=["*"],  # Allows all methods
             allow_headers=["*"],  # Allows all headers
         )
+        # THIS FLAG IS ONLY TO DO TEST THE UI WITHOUT LLM, 
         self.use_agent_json = True # Make it true to make any UI change to avoid hitting backend and LLM
         @self.app.post("/research")
         def execute_research(request: QueryRequest):
@@ -56,7 +57,7 @@ class LeadGenerationAPI:
                 #print("Serialized Response Content:", response.body.decode())
                 #print(structured_json)
             else:
-                time.sleep(30)
+                time.sleep(20)
                 structured_json=JSONFileReader().read_json()
                 return structured_json
 
