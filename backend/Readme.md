@@ -57,7 +57,8 @@ npm run dev
 
 3. Open your browser and navigate to:
 ```bash
- http://localhost:5173/
+ http://localhost:5174/
+ Update the URL in the LeadGenerationAPI CORS API, if the URL is different
 ```
 ## Contributing
 Feel free to fork the repository and submit pull requests

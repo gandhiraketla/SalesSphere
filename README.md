@@ -9,10 +9,11 @@ SalesSphere is an intelligent lead generation platform designed to identify and 
 - 🎨 **Modern UI**: Enjoy a responsive and user-friendly interface.
 - ⚡ **Real-Time Analysis**: Generate and analyze leads instantly.
 ## Tech Stack
-- **Backend**: FastAPI, CrewAI, Perplexity, OpenAI
 - **Frontend**: Vue.js, Tailwind CSS
-- **AI/ML**: LangChain, SpaCy
-
+- **API Layer** : Fast API
+- **Agent Frmeworks**: CrewAI
+- **LLM**: OpenAI, Perplexity
+- **NLP**: Spacy
 
 ## Prerequisites
 Before starting, ensure you have the following installed:
@@ -27,10 +28,12 @@ Before starting, ensure you have the following installed:
 git clone https://github.com/yourusername/sales-sphere.git
 cd sales-sphere
 ```
-2. Create a .env file in the project root and add your API keys:
+2. Create a .env file in the backend folder and add your API keys:
 ```bash
 PERPLEXITY_API_KEY=your_perplexity_api_key
 OPENAI_API_KEY=your_openai_api_key
+OPENAI_MODEL_NAME=openai_model_name
+PERPLEXITY_MODEL_NAME=perplexity model name
 ```
 3. Install Python dependencies:
 ```bash
@@ -52,12 +55,14 @@ uvicorn api.main:app --reload
 2. Start the Vue.js frontend development server:
 ```bash
 # From the frontend directory
+cd frontend
 npm run dev
 ```
 
 3. Open your browser and navigate to:
 ```bash
- http://localhost:5173/
+ http://localhost:5174/
+ Note : Check for actual url in the log of npm run dev
 ```
 ## Contributing
 Feel free to fork the repository and submit pull requests
