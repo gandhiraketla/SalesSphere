@@ -28,10 +28,12 @@ Before starting, ensure you have the following installed:
 git clone https://github.com/yourusername/sales-sphere.git
 cd sales-sphere
 ```
-2. Create a .env file in the project root and add your API keys:
+2. Create a .env file in the backend folder and add your API keys:
 ```bash
 PERPLEXITY_API_KEY=your_perplexity_api_key
 OPENAI_API_KEY=your_openai_api_key
+OPENAI_MODEL_NAME=openai_model_name
+PERPLEXITY_MODEL_NAME=perplexity model name
 ```
 3. Install Python dependencies:
 ```bash
